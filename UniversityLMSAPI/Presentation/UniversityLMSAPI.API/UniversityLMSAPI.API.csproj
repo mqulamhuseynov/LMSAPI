@@ -17,11 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\Core\UniversityLMSAPI.Application\UniversityLMSAPI.Application.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\UniversityLMSAPI.Infrastructure\UniversityLMSAPI.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
