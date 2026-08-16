@@ -1,7 +1,14 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using UniversityLMSAPI.Application.Services.Implementations;
+using UniversityLMSAPI.Application.Services.Interfaces;
 using UniversityLMSAPI.Domain.Entities;
+using UniversityLMSAPI.Infrastructure.Externals;
 using UniversityLMSAPI.Persistence.Data;
 
 namespace UniversityLMSAPI.API
@@ -22,6 +29,11 @@ namespace UniversityLMSAPI.API
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+            //Dependecy injections
+            builder.Services.AddJwtAuthentication(builder.Configuration);
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
+
 
             builder.Services.AddControllers();
 
@@ -38,6 +50,8 @@ namespace UniversityLMSAPI.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
