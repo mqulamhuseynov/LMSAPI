@@ -1,10 +1,7 @@
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
+using Microsoft.OpenApi.Models;
 using UniversityLMSAPI.Application.Services.Implementations;
 using UniversityLMSAPI.Application.Services.Interfaces;
 using UniversityLMSAPI.Domain.Entities;
@@ -28,7 +25,10 @@ namespace UniversityLMSAPI.API
                 //identity options configleri
             })
             .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddRoles<IdentityRole<Guid>>(); ;
+
+
             //Dependecy injections
             builder.Services.AddJwtAuthentication(builder.Configuration);
             builder.Services.AddScoped<IAuthService, AuthService>();
@@ -38,7 +38,44 @@ namespace UniversityLMSAPI.API
             builder.Services.AddControllers();
 
             builder.Services.AddEndpointsApiExplorer();
+
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "LMS.API",
+                    Version = "v1"
+                });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Bearer {token}"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+            });
+
             builder.Services.AddSwaggerGen();
+
+
 
             var app = builder.Build();
 

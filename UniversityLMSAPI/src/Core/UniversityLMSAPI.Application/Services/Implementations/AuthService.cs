@@ -3,29 +3,53 @@ using UniversityLMSAPI.Application.DTOs.Auth;
 using UniversityLMSAPI.Application.DTOs.Requests.Auth;
 using UniversityLMSAPI.Application.DTOs.Responses;
 using UniversityLMSAPI.Application.Services.Interfaces;
+using UniversityLMSAPI.Application.Services.Interfaces.Externals;
 using UniversityLMSAPI.Domain.Entities;
 
 namespace UniversityLMSAPI.Application.Services.Implementations
 {
-    public class AuthService(UserManager<AppUser> userManager) : IAuthService
+    public class AuthService(UserManager<AppUser> userManager,
+        IJwtService jwtService,
+        RoleManager<IdentityRole<Guid>> roleManager) : IAuthService
     {
         
-        public async Task<ApiResponse<LoginDTO>> LoginAsync(LoginRequestDTO request)
+        public async Task<ApiResponse<AuthResponse>> LoginAsync(LoginRequestDTO request)
         {
-            throw new NotImplementedException();
+            var user = await userManager.FindByNameAsync(request.PersonalCode);
+
+            if (user is null || !await userManager.CheckPasswordAsync(user, request.Password))
+                return ApiResponse<AuthResponse>.FailResponse("Email or Password is wrong", 400);
+
+            var accessToken = await jwtService.GenerateAccessTokenAsync(user);
+
+            var authResponse = new AuthResponse
+            {
+                Token = accessToken,
+                ExpirationMin = "60m"
+            };
+
+
+            return ApiResponse<AuthResponse>.SuccessResponse(authResponse, "Succesfully logged in", 200);
+
         }
 
-        public async Task<ApiResponse<RegisterDTO>> RegisterAsync(RegisterDTO request)
+        public async Task CreateRole(CreateRoleDTO dto) 
+        {
+            IdentityRole<Guid> role = new() { Name = dto.RoleName };
+            await roleManager.CreateAsync(role);
+        }
+
+        public async Task<ApiResponse<AuthResponse>> RegisterUserAsync(RegisterDTO request)
         {
             var existingUser = await userManager.FindByEmailAsync(request.Email);
             if (existingUser is not null) 
             {
-            return ApiResponse<RegisterDTO>.FailResponse("User with this email already exists.", 400);
+                return ApiResponse<AuthResponse>.FailResponse("This user already exists. Son(agliyan smaylik emojisi",401);
             }
 
             var newUser = new AppUser
             {
-                UserName = request.Email,
+                UserName = request.PersonalCode,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Email = request.Email,
@@ -41,11 +65,19 @@ namespace UniversityLMSAPI.Application.Services.Implementations
 
             var result = await userManager.CreateAsync(newUser, request.Password);
             if (!result.Succeeded) {
-                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
-                return ApiResponse<RegisterDTO>.FailResponse($"User creation failed: {errors}", 400);
+               
+                return ApiResponse<AuthResponse>.FailResponse("During register something happened son", 400);
             }
 
-            return ApiResponse<RegisterDTO>.SuccessResponse(request, "User registered successfully.", 201);
+            var accessToken = await jwtService.GenerateAccessTokenAsync(newUser);
+
+            AuthResponse authResponse = new AuthResponse
+            {
+                Token = accessToken,
+                ExpirationMin = "60m"
+            };
+
+            return ApiResponse<AuthResponse>.SuccessResponse(authResponse);
         }
     }
 }

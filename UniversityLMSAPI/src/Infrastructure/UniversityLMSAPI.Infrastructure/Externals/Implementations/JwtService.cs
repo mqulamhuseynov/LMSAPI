@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using UniversityLMSAPI.Application.Services.Interfaces.Externals;
 using UniversityLMSAPI.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
