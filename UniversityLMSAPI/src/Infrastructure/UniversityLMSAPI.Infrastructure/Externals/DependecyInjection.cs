@@ -2,11 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using UniversityLMSAPI.Application.Services.Interfaces.Externals;
 using UniversityLMSAPI.Infrastructure.Externals.Implementations;
 
@@ -21,6 +18,7 @@ namespace UniversityLMSAPI.Infrastructure.Externals
 
                 services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
                 services.AddScoped<IJwtService, JwtService>();
+            
            
 
                 services.AddAuthentication(options =>
@@ -39,9 +37,12 @@ namespace UniversityLMSAPI.Infrastructure.Externals
                         ValidIssuer = jwtSettings.Issuer,
                         ValidAudience = jwtSettings.Audience,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
-                        ClockSkew = TimeSpan.Zero
+                        ClockSkew = TimeSpan.Zero,
+                        RoleClaimType = ClaimTypes.Role
                     };
                 });
+
+
 
                 return services;
             }
