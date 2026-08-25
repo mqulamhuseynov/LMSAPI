@@ -1,6 +1,4 @@
 ﻿
-using System.Text.RegularExpressions;
-
 namespace UniversityLMSAPI.Domain.Entities
 {
     public class Student
