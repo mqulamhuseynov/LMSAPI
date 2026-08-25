@@ -16,7 +16,6 @@ namespace UniversityLMSAPI.Application.DTOs.Auth
         public string Country { get; set; } = null!;
         public Guid GroupId { get; set; }
         public DateTime BirthDate { get; set; }
-        public DateTime AcceptedDate { get; set; }
         
     }
 }
