@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace UniversityLMSAPI.Application.DTOs.Auth
 {
-    public class RegisterDTO
+    public class RegisterStudentDTO
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
@@ -18,6 +14,7 @@ namespace UniversityLMSAPI.Application.DTOs.Auth
         public string Address { get; set; } = null!;
         public string City { get; set; } = null!;
         public string Country { get; set; } = null!;
+        public Guid GroupId { get; set; }
         public DateTime BirthDate { get; set; }
         public DateTime AcceptedDate { get; set; }
         

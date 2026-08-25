@@ -39,7 +39,7 @@ namespace UniversityLMSAPI.Application.Services.Implementations
             await roleManager.CreateAsync(role);
         }
 
-        public async Task<ApiResponse<AuthResponse>> RegisterUserAsync(RegisterDTO request)
+        public async Task<ApiResponse<AuthResponse>> RegisterUserAsync(RegisterStudentDTO request)
         {
             var existingUser = await userManager.FindByEmailAsync(request.Email);
             if (existingUser is not null) 
