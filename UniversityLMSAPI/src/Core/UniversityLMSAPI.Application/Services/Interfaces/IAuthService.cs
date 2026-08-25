@@ -8,7 +8,7 @@ namespace UniversityLMSAPI.Application.Services.Interfaces
     public interface IAuthService
     {
         public Task<ApiResponse<AuthResponse>> LoginAsync(LoginRequestDTO request);
-        public Task<ApiResponse<AuthResponse>> RegisterUserAsync(RegisterDTO request);
+        public Task<ApiResponse<AuthResponse>> RegisterUserAsync(RegisterStudentDTO request);
         public Task CreateRole(CreateRoleDTO dto);
     }
 }

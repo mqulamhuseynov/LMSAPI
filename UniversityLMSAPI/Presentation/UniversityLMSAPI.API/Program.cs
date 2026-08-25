@@ -1,10 +1,10 @@
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using UniversityLMSAPI.Application.Services.Implementations;
 using UniversityLMSAPI.Application.Services.Interfaces;
 using UniversityLMSAPI.Domain.Entities;
+using UniversityLMSAPI.Domain.Enums;
 using UniversityLMSAPI.Infrastructure.Externals;
 using UniversityLMSAPI.Persistence.Data;
 
@@ -18,7 +18,7 @@ namespace UniversityLMSAPI.API
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-            builder.Services.AddDbContext<AppDbContext>(options =>  options.UseNpgsql(connectionString));
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
             builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
             {
@@ -79,7 +79,7 @@ namespace UniversityLMSAPI.API
 
             var app = builder.Build();
 
-            
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -94,6 +94,21 @@ namespace UniversityLMSAPI.API
 
 
             app.MapControllers();
+
+
+            //sadece 1 defeliy seed olunur eger yeni klonlamisinizsa async metod edin ve kommentden cixarin bu kodu
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+            //    foreach (var role in Enum.GetValues<AppRole>())
+            //    {
+            //        var roleName = role.ToString();
+            //        if (!await roleManager.RoleExistsAsync(roleName))
+            //        {
+            //            await roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
+            //        }
+            //    }
+            //}
 
             app.Run();
         }

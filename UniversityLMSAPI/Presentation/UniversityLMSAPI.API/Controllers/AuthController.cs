@@ -12,7 +12,7 @@ namespace UniversityLMSAPI.API.Controllers
     public class AuthController(IAuthService authService) : ControllerBase
     {
         [HttpPost]
-        public async Task<IActionResult> RegisterUser([FromBody] RegisterDTO request) 
+        public async Task<IActionResult> RegisterUser([FromBody] RegisterStudentDTO request) 
         {
         var result = await authService.RegisterUserAsync(request);
             return Ok(result);
