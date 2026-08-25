@@ -7,6 +7,8 @@ using UniversityLMSAPI.Domain.Entities;
 using UniversityLMSAPI.Domain.Enums;
 using UniversityLMSAPI.Infrastructure.Externals;
 using UniversityLMSAPI.Persistence.Data;
+using UniversityLMSAPI.Persistence;
+using UniversityLMSAPI.Application;
 
 namespace UniversityLMSAPI.API
 {
@@ -31,7 +33,8 @@ namespace UniversityLMSAPI.API
 
             //Dependecy injections
             builder.Services.AddJwtAuthentication(builder.Configuration);
-            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddPersistence();
+            builder.Services.AddApplication();
 
 
 
